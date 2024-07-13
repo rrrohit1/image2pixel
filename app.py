@@ -1,68 +1,77 @@
 # Approach 1: Direct Pixel Extraction
 
-import numpy as np
-from PIL import Image
-from utils import is_black_and_white    
+import cv2
+import argparse
 
-def direct_pixel_extraction(image_path):
+def image_to_pixel_array(image_path):
     """
-    Extracts pixel values from an image and returns a NumPy array.
+    Convert an image file to a pixel array.
 
     Args:
         image_path (str): The path to the image file.
 
     Returns:
-        numpy.ndarray: A NumPy array containing the pixel values of the image. The shape of the array
-        depends on whether the image is black and white or color. For black and white images, the shape
-        is (height, width, 1) and for color images, the shape is (height, width, 3).
+        tuple: A tuple containing the pixel array and the image format.
+            - The pixel array is a numpy array representing the image.
+            - The image format is a string indicating the format of the image.
+              Possible values are 'grayscale', 'color', or 'color with alpha'.
 
+    Raises:
+        ValueError: If the image file cannot be read or if the image format is unsupported.
     """
-    # Open the image using PIL
-    img = Image.open(image_path)
+    # Read the image
+    img = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
     
-    # Convert the image to RGB mode if it's not already
-    img = img.convert('RGB')
-    
-    # Get the dimensions of the image
-    width, height = img.size
-    
-    # store if the image is black and white in a variable
-    isBnW = is_black_and_white(image_path)
+    if img is None:
+        raise ValueError("Unable to read the image. Please check the file path.")
 
-    # Create a NumPy array to store the pixel values
-    pixel_array = np.zeros((height, width, 1 if isBnW else 3), dtype=np.float32)
+    # Check if the image is grayscale or color
+    if len(img.shape) == 2:
+        # It's grayscale
+        return img, "grayscale"
+    elif len(img.shape) == 3:
+        if img.shape[2] == 3:
+            # It's a color image (BGR)
+            return cv2.cvtColor(img, cv2.COLOR_BGR2RGB), "color"
+        elif img.shape[2] == 4:
+            # It's a color image with alpha channel (BGRA)
+            return cv2.cvtColor(img, cv2.COLOR_BGRA2RGBA), "color with alpha"
     
-    # Iterate over each pixel in the image
-    if isBnW:
-         for y in range(height):
-            for x in range(width):
-                # Get the RGB values of the pixel
-                r, g, b = img.getpixel((x, y))   
-                
-                # Store the R values in the NumPy array since the image is black and white
-                # and all the RGB values are the same
-                pixel_array[y, x] = [r/ 255.0]
-
-    else:
-        for y in range(height):
-            for x in range(width):
-                # Get the RGB values of the pixel
-                r, g, b = img.getpixel((x, y))   
-                
-                # Store the RGB values in the NumPy array
-                pixel_array[y, x] = [r/ 255.0, g/ 255.0, b/ 255.0]  # Normalize the values to the range [0, 1]
-    
-    return pixel_array
+    raise ValueError("Unsupported image format")
 
 def main():
-    # Example usage
-    image_path = '/Users/rohitrawat/github-repos/image2pixel/test.png'
-    result = direct_pixel_extraction(image_path)
+    """
+    Convert an image to its pixel constituents in a NumPy array.
 
-    print(f"Image dimensions: {result.shape}")
-    print("Sample pixel values:")
-    print(result.flatten().reshape(-1, result.shape[0]))  # Print the first 5x5 pixels
+    Usage:
+        python app.py <image_path>
+
+    Arguments:
+        image_path (str): Path to the input image file.
+
+    Returns:
+        None
+    """
+    parser = argparse.ArgumentParser(description="Convert an image to its pixel constituents in a NumPy array.")
+    parser.add_argument("image_path", help="Path to the input image file")
+    args = parser.parse_args()
+
+    try:
+        pixel_array, img_type = image_to_pixel_array(args.image_path)
+        
+        print(f"Image type: {img_type}")
+        print(f"Array shape: {pixel_array.shape}")
+        print(f"Array data type: {pixel_array.dtype}")
+        
+        if img_type == "grayscale":
+            print("\nFirst 5x5 pixel values:")
+            print(pixel_array[:5, :5])
+        else:
+            print("\nFirst 5 pixel values (RGB):")
+            print(pixel_array[:5, 0, :])
+
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
 
 if __name__ == "__main__":
     main()
-
