@@ -52,3 +52,25 @@ python app.py /path/to/image.jpg --method pretrained
 - Extract and normalize pixel values from images.
 - Support for both grayscale and RGB images.
 - Outputs a NumPy array containing the normalized pixel values.
+
+## Direct VS Pretrained approach
+
+Below is a comparison of both methods based on various factors.
+
+| Factor              | Direct Method                          | Pretrained Method                       |
+|---------------------|----------------------------------------|-----------------------------------------|
+| **Complexity**      | Simple, direct manipulation of pixels. | Uses advanced pretrained models.        |
+| **Speed**           | Potentially faster for specific cases. | May introduce computational overhead.   |
+| **Dependencies**    | Fewer, simpler dependencies.           | Requires deep learning frameworks and pretrained models. |
+| **Robustness**      | May require manual tuning.             | More robust to variations in images.    |
+| **Ease of Use**     | Straightforward for basic usage.       | Simplifies complex image processing tasks. |
+| **Transparency**    | High, easier to debug.                 | Lower, due to the complexity of models. |
+| **Use Case**        | Suitable for simple applications or when processing speed is critical. | Better for high accuracy and handling diverse image types. |
+
+## Performance Metrics
+
+The script measures the time taken to convert an image to a pixel array using both methods. It also prints the method used, the image type, the shape of the resulting pixel array, and its data type. For grayscale images, it displays the first 5x5 pixel values, and for RGB images, it shows the first 5 pixel values in the RGB channels.
+
+## Error Handling
+
+The script includes error handling to catch and report any issues that occur during the image conversion process.
