@@ -5,6 +5,7 @@ import argparse
 from PIL import Image
 import numpy as np
 from transformers import AutoImageProcessor
+import time
 
 def image_to_pixel_array_direct(image_path):
     """
@@ -105,11 +106,14 @@ def main():
     args = parser.parse_args()
 
     try:
+        start_time = time.time()
         if args.method == 'direct':
-            pixel_array, img_type = image_to_pixel_array_direct(args.image_path)
+            pixel_array, img_type = image_to_pixel_array_direct(args.image_path)        
         else:  # args.method == 'pretrained'
             pixel_array, img_type = image_to_pixel_array_pretrained(args.image_path)
-        
+        end_time = time.time()
+        print(f"Time taken for {args.method} method: {round(end_time - start_time, 5)} seconds")
+
         print(f"Method used: {args.method}")
         print(f"Image type: {img_type}")
         print(f"Array shape: {pixel_array.shape}")
