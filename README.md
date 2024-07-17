@@ -53,6 +53,25 @@ python app.py /path/to/image.jpg --method pretrained
 - Support for both grayscale and RGB images.
 - Outputs a NumPy array containing the normalized pixel values.
 
+## Computational Resources for Pretrained Model
+
+Running the pretrained model (`image_to_pixel_array_pretrained`) requires specific computational resources for optimal performance. Below are the recommended specifications:
+
+### Hardware Requirements
+
+- **CPU:** Modern multi-core processor (Intel i5/i7/i9 or AMD equivalent) with at least 4 cores recommended.
+- **GPU:** NVIDIA GPU with CUDA support (Compute Capability 3.5 or higher) is highly recommended for accelerated processing.
+- **RAM:** Minimum of 8GB RAM; 16GB or more is recommended for processing high-resolution images or large batches of images.
+
+### Software Requirements
+
+- **Operating System:** Windows 10/11, macOS (latest version), or Linux (Ubuntu 18.04 or later, CentOS 7 or later).
+- **Python Version:** Python 3.6 or newer.
+- **Dependencies:** Ensure all Python dependencies are installed, and any specific libraries required by the pretrained model.
+
+
+Please adjust these requirements based on the specific pretrained model you are using and the complexity of the images being processed.
+
 ## Direct VS Pretrained approach
 
 Below is a comparison of both methods based on various factors.
